@@ -7,11 +7,13 @@ import { BasicCreationComponent } from './basic-creation/basic-creation.componen
 
 import { MaterialModule } from './material.module';
 import { FormsModule } from '@angular/forms';
+import { OperatorsComponent } from './operators/operators.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    BasicCreationComponent
+    BasicCreationComponent,
+    OperatorsComponent
   ],
   imports: [
     BrowserModule,
