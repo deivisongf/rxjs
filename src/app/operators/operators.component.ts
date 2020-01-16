@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { from, fromEvent, interval, Observable, Subscription } from 'rxjs';
-import { map, delay, filter, tap, take, first, last } from 'rxjs/operators';
+import { map, delay, filter, tap, take, first, last, debounceTime } from 'rxjs/operators';
+import { MatRipple } from '@angular/material';
 
 @Component({
   selector: 'app-operators',
@@ -8,6 +9,8 @@ import { map, delay, filter, tap, take, first, last } from 'rxjs/operators';
   styleUrls: ['./operators.component.css']
 })
 export class OperatorsComponent implements OnInit {
+
+  @ViewChild(MatRipple, {static:false}) ripple: MatRipple;
 
   constructor() { }
 
@@ -87,6 +90,28 @@ export class OperatorsComponent implements OnInit {
         clearInterval(interv);
       }
     }, 200)
+  }
+
+  launchRipple() {
+    const rippleRef = this.ripple.launch({
+      persistent: true, centered: true
+    });
+
+    rippleRef.fadeOut();
+  }
+
+  debounceTimeClick(){
+    fromEvent(document, 'click')
+    .pipe(
+      tap((e) => console.log('Click')),
+      debounceTime(1000)
+    )
+    .subscribe(
+      (e:MouseEvent) => {
+         console.log('Click with debounceTime', e)
+         this.launchRipple()
+      }
+    )
   }
 
 }
