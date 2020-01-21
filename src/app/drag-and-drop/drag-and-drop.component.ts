@@ -1,4 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { fromEvent } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-drag-and-drop',
@@ -15,6 +17,27 @@ export class DragAndDropComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    let mousedown = fromEvent(this.myrect.nativeElement, 'mousedown');
+    let mousemove = fromEvent(document, 'mousemove');
+    let mouseup   = fromEvent(document, 'mouseup');
+
+    mousedown.subscribe((ed:MouseEvent) => {
+      let x = ed.screenX;
+      let y = ed.screenY;
+
+      mousemove
+      .pipe(takeUntil(mouseup))
+      .subscribe((em:MouseEvent) => {
+        let offsetx = x - em.screenX;
+        let offsety = y - em.screenY;
+
+        this.top  -= offsety;
+        this.left -= offsetx; 
+
+        x = em.screenX;
+        y = em.screenY;
+      })
+    });
   }
 
 }
